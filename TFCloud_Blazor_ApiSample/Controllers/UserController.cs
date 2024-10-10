@@ -1,4 +1,5 @@
 ﻿using BCrypt.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TFCloud_Blazor_ApiSample.Models.DTOs;
@@ -48,7 +49,7 @@ namespace TFCloud_Blazor_ApiSample.Controllers
             }
             return BadRequest("Mot de passe invalide");
         }
-
+        [Authorize("adminRequired")]
         [HttpGet]
         public IActionResult GetAll()
         {

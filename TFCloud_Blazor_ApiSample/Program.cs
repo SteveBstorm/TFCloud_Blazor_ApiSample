@@ -38,9 +38,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("adminRequired", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("userRequired", policy => policy.RequireAuthenticatedUser());
 });
 
-
+builder.Services.AddCors(options => options.AddPolicy("MyPolicy", 
+    o => o.AllowCredentials()
+          .WithOrigins("https://localhost:7041")
+          .AllowAnyHeader()
+          .AllowAnyMethod()));
 
 var app = builder.Build();
 
@@ -53,8 +58,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// OBLIGATOIREMENT DANS CE SENS
+app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseCors("MyPolicy");
+//app.UseCors(o => o.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 app.MapControllers();
 
 app.Run();
