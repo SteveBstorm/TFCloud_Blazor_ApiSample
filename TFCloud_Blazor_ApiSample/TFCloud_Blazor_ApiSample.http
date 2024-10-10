@@ -1,0 +1,6 @@
+@TFCloud_Blazor_ApiSample_HostAddress = http://localhost:5128
+
+GET {{TFCloud_Blazor_ApiSample_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
