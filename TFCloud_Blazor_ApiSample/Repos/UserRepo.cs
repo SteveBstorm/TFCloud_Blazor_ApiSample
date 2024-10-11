@@ -40,5 +40,10 @@ namespace TFCloud_Blazor_ApiSample.Repos
         {
             return _connection.QueryFirst<string>("SELECT Password FROM Users WHERE Email  = @email", new { email });
         }
+
+        public User GetProfileByMail(string email)
+        {
+            return _connection.QueryFirst<User>("SELECT * FROM Users WHERE Email = @email", new { email });
+        }
     }
 }

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using TFCloud_Blazor_ApiSample.Models.DTOs;
 using TFCloud_Blazor_ApiSample.Repos;
 using TFCloud_Blazor_ApiSample.Tools;
@@ -54,6 +56,17 @@ namespace TFCloud_Blazor_ApiSample.Controllers
         public IActionResult GetAll()
         {
             return Ok(userRepo.GetAll());
+        }
+
+        [Authorize("userRequired")]
+        [HttpGet("profile")]
+        public IActionResult GetUserInfo()
+        {
+            string tokenFromRequest = HttpContext.Request.Headers["Authorization"];
+            string token = tokenFromRequest.Substring(7, tokenFromRequest.Length - 7);
+            JwtSecurityToken jwt = new JwtSecurityToken(token);
+            string email = jwt.Claims.First(x => x.Type == ClaimTypes.Email).Value;
+            return Ok(userRepo.GetProfileByMail(email));
         }
     }
 }
